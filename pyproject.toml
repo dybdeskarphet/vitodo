@@ -1,0 +1,21 @@
+[project]
+name = "vitodo"
+version = "0.1.0"
+license = "GPL-3.0-or-later"
+description = "A very practical and minimal todo.txt CLI tool"
+keywords = ["todotxt", "todo", "minimal", "cli", "productivity", "productive"]
+readme = "README.md"
+requires-python = ">=3.13"
+maintainers = [
+  { name = "Ahmet Arda Kavakcı", email = "ahmetardakavakci@gmail.com" },
+]
+dependencies = []
+
+[project.urls]
+Documentation = "https://github.com/dybdeskarphet/vitodo"
+Issues = "https://github.com/dybdeskarphet/vitodo/issues"
+Repository = "https://github.com/dybdeskarphet/vitodo"
+Changelog = "https://github.com/dybdeskarphet/vitodo"
+
+[project.scripts]
+vitodo = "vitodo.app:app"
