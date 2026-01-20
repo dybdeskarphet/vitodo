@@ -9,6 +9,7 @@ from pydantic.dataclasses import dataclass
 
 class GeneralConfig(BaseModel):
     todo_path: str = ""
+    clean_description: bool = False
 
 
 class ConfigModel(BaseModel):
