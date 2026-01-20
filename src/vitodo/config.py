@@ -14,10 +14,10 @@ from vitodo.types import ConfigModel
 
 class Config:
     def __init__(self) -> None:
-        self.config_path: Path | None = None
+        self.config_path: Path
         self.app_name: str = "vitodo"
-        self.config_raw: dict[str, Any] | None = None
-        self.config_parsed: ConfigModel | None = None
+        self.config_raw: dict[str, Any]
+        self.config_parsed: ConfigModel
         self._set_config_path()
         self._read_config()
         self._load_config()
@@ -41,12 +41,6 @@ class Config:
         self.config_path = config_dir / "config.toml"
 
     def _read_config(self):
-        if not self.config_path:
-            error(
-                "Path is not defined because of an internal error.\nIssue this to the project repository if you have the time"
-            )
-            exit(1)
-
         try:
             with open(self.config_path, "rb") as f:
                 self.config_raw = tomllib.load(f)
