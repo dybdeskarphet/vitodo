@@ -1,5 +1,6 @@
 from datetime import date
 from enum import Enum, auto
+from typing import TypedDict
 from pydantic import BaseModel
 from pathlib import Path
 
@@ -23,11 +24,10 @@ class Priority(Enum):
     F = auto()
 
 
-@dataclass
-class TodoItem:
+class TodoItem(TypedDict, total=False):
     priority: Priority
     start_date: date
     description: str
-    project: str
-    context: str
+    project: list[str]
+    context: list[str]
     due_date: date
