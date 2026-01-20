@@ -7,7 +7,7 @@ from pydantic.dataclasses import dataclass
 
 
 class GeneralConfig(BaseModel):
-    todo_path: Path = Path()
+    todo_path: str = ""
 
 
 class ConfigModel(BaseModel):

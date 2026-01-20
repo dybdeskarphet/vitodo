@@ -7,6 +7,7 @@ from rich.table import Table
 from vitodo.logger import error
 from vitodo.logger import console
 import tomllib
+from os import path
 
 from vitodo.types import ConfigModel
 
@@ -20,6 +21,7 @@ class Config:
         self._set_config_path()
         self._read_config()
         self._load_config()
+        self._expand_config()
 
     def _set_config_path(self):
         home = getenv("HOME")
@@ -69,6 +71,11 @@ class Config:
             error(f"Invalid config file:")
             console.print(table)
             exit(1)
+
+    def _expand_config(self):
+        self.config_parsed.general.todo_path = path.expanduser(
+            path.expandvars(self.config_parsed.general.todo_path)
+        )
 
 
 config = Config().config_parsed
