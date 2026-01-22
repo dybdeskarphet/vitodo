@@ -1,10 +1,10 @@
 from datetime import date
 from enum import Enum, auto
-from typing import TypedDict
+from typing import Literal, TypedDict
 from pydantic import BaseModel
-from pathlib import Path
 
-from pydantic.dataclasses import dataclass
+type TabularMatch = Literal["priority", "context", "project"]
+type TabularMatchTypes = str | list[str]
 
 
 class GeneralConfig(BaseModel):
@@ -12,8 +12,13 @@ class GeneralConfig(BaseModel):
     clean_description: bool = False
 
 
+class TableConfig(BaseModel):
+    group_by: TabularMatch
+
+
 class ConfigModel(BaseModel):
     general: GeneralConfig
+    tables: TableConfig
 
 
 class Priority(Enum):
