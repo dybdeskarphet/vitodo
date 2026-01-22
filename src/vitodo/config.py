@@ -9,6 +9,7 @@ from vitodo.logger import console
 import tomllib
 from os import path
 
+from vitodo.messages import ErrorMessages
 from vitodo.types import ConfigModel
 
 
@@ -34,7 +35,7 @@ class Config:
             else:
                 config_dir = Path(home) / ".config" / self.app_name
         else:
-            error("No home directory found.")
+            error(ErrorMessages.NO_HOME.value)
             exit(1)
 
         config_dir.mkdir(parents=True, exist_ok=True)
@@ -45,10 +46,10 @@ class Config:
             with open(self.config_path, "rb") as f:
                 self.config_raw = tomllib.load(f)
         except FileNotFoundError:
-            error(f"Config file not found at {self.config_path}")
+            error(f"{ErrorMessages.NO_CONFIG.value}: {self.config_path}")
             exit(1)
         except tomllib.TOMLDecodeError as e:
-            error(f"Failed to parse TOML: {e}")
+            error(f"{ErrorMessages.TOML_PARSE_FAILED}: {e}")
             exit(1)
 
     def _load_config(self):
@@ -62,7 +63,7 @@ class Config:
                 loc = " -> ".join(str(x) for x in err["loc"])
                 table.add_row(loc, err["msg"], err["type"])
 
-            error(f"Invalid config file:")
+            error(f"{ErrorMessages.INVALID_CONFIG.value}:")
             console.print(table)
             exit(1)
 
