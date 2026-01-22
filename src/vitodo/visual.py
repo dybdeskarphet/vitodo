@@ -1,35 +1,60 @@
-from pydoc import describe
-from typing import Any
-from vitodo.logger import console, error
-from vitodo.parser import Parser
-from vitodo.types import TabularMatch, TodoItem
+from rich.console import Console
+from vitodo.logger import error
+from vitodo.messages import ErrorMessages
+from vitodo.types import Priority, TabularMatch, TodoItem
 from rich.table import Table
+from rich import box
 
 
 class Visualizer:
     def __init__(self, todo_items: list[TodoItem]):
         self.todo_items = todo_items
+        self.todo_items_grouped: dict[str, list[TodoItem]] = {}
+
+    def _handle_priority_item_grouping(self, key: Priority, item: TodoItem):
+        print(item)
+        if key.name in self.todo_items_grouped:
+            self.todo_items_grouped[key.name].append(item)
+        else:
+            self.todo_items_grouped[key.name] = [item]
+
+    def _handle_list_item_grouping(self, keys: list[str], item: TodoItem):
+        for key in keys:
+            if key in self.todo_items_grouped:
+                self.todo_items_grouped[key].append(item)
+            else:
+                self.todo_items_grouped[key] = [item]
 
     def group_by(self, key: TabularMatch):
-        items_grouped: dict[Any, list[str]] = {}
         for item in self.todo_items:
             try:
                 item_desc = item.get("description")
                 item_key = item.get(key)
-                if item_key and item_desc:
-                    if item_key in items_grouped:
-                        items_grouped[item_key].append(item_desc)
-                    else:
-                        items_grouped[item_key] = [item_desc]
-            except KeyError:
-                error(f"Couldn't find the relevant values of a to-do item.")
+                if not item_desc or not item_key:
+                    error(ErrorMessages.NO_ITEM_PROPERTIES_GROUPING.value)
+                    exit(1)
+
+                if isinstance(item_key, Priority):
+                    self._handle_priority_item_grouping(item_key, item)
+                elif isinstance(item_key, list):
+                    self._handle_list_item_grouping(item_key, item)
+
+            except KeyError as e:
+                error(f"{ErrorMessages.GROUP_BY_KEY_ERROR.value} {e}")
                 exit(1)
             except Exception as e:
-                error(f"Couldn't find the relevant values of a to-do item.")
+                error(f"{ErrorMessages.INTERNAL_ERROR.value} {e}")
                 exit(1)
 
-        print(items_grouped)
-
-
-parser = Parser()
-vis = Visualizer(parser.todo_items).show_table("priority")
+    def generate_table(self):
+        for key, values in self.todo_items_grouped.items():
+            console = Console(width=60)
+            table = Table(box=box.MINIMAL)
+            table.add_column("start")
+            table.add_column(key, no_wrap=False)
+            for value in values:
+                table.add_row(
+                    value.get("start_date").strftime("%m/%d/%Y"),
+                    value.get("description"),
+                )
+            console.print(table)
