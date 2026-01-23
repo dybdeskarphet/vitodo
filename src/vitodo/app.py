@@ -11,8 +11,8 @@ app = typer.Typer(
 
 @app.command()
 def dothings():
-    parser = Parser(config.visual.clean_description)
-    visualizer = Visualizer(parser.todo_items)
+    todo_list = Parser(config).parse_todo_list()
+    visualizer = Visualizer(todo_list)
     visualizer.group_by(config.tables.group_by)
     visualizer.generate_table()
 
