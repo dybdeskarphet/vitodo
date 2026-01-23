@@ -8,6 +8,26 @@ type ColumnMatch = Literal[
     "priority", "start_date", "description", "project", "context", "due_date"
 ]
 type TabularMatchTypes = str | list[str]
+type BoxType = Literal[
+    "ASCII",
+    "ASCII2",
+    "ASCII_DOUBLE_HEAD",
+    "SQUARE",
+    "SQUARE_DOUBLE_HEAD",
+    "MINIMAL",
+    "MINIMAL_HEAVY_HEAD",
+    "SIMPLE",
+    "SIMPLE_HEAD",
+    "SIMPLE_HEAVY",
+    "HORIZONTALS",
+    "ROUNDED",
+    "HEAVY",
+    "HEAVY_EDGE",
+    "HEAVY_HEAD",
+    "DOBULE",
+    "DOUBLE_EDGE",
+    "MARKDOWN",
+]
 
 
 class GeneralConfig(BaseModel):
@@ -22,6 +42,7 @@ class VisualConfig(BaseModel):
 class TableConfig(BaseModel):
     group_by: TabularMatch = "priority"
     columns: list[ColumnMatch] = ["description"]
+    box_type: BoxType = "MINIMAL"
 
 
 class ConfigModel(BaseModel):

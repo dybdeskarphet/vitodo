@@ -1,10 +1,9 @@
 from datetime import date
-from typing import Any, get_type_hints
 from rich.console import Console
 from vitodo.config import config
 from vitodo.logger import error
 from vitodo.messages import ErrorMessages
-from vitodo.types import Priority, TabularMatch, TodoItem, TodoItemProperty
+from vitodo.types import Priority, TabularMatch, TodoItem
 from rich.table import Table
 from rich import box
 
@@ -61,7 +60,11 @@ class Visualizer:
     def generate_table(self):
         console = Console(width=60)
         for grouping_key, items in self.todo_items_grouped.items():
-            table = Table(title=grouping_key, title_style="green")
+            table = Table(
+                title=grouping_key,
+                box=getattr(box, config.tables.box_type, box.MINIMAL),
+                title_style="green",
+            )
             [table.add_column(c) for c in config.tables.columns]
             [table.add_row(*r) for r in items]
             console.print(table)
