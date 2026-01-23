@@ -1,24 +1,33 @@
 from datetime import date
 from enum import Enum, auto
 from typing import Literal, TypedDict
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 type TabularMatch = Literal["priority", "context", "project"]
+type ColumnMatch = Literal[
+    "priority", "start_date", "description", "project", "context", "due_date"
+]
 type TabularMatchTypes = str | list[str]
 
 
 class GeneralConfig(BaseModel):
-    todo_path: str = ""
+    todo_path: str
+
+
+class VisualConfig(BaseModel):
     clean_description: bool = False
+    date_format: str = "%Y-%m-%d"
 
 
 class TableConfig(BaseModel):
-    group_by: TabularMatch
+    group_by: TabularMatch = "priority"
+    columns: list[ColumnMatch] = ["description"]
 
 
 class ConfigModel(BaseModel):
     general: GeneralConfig
-    tables: TableConfig
+    visual: VisualConfig = Field(default_factory=VisualConfig)
+    tables: TableConfig = Field(default_factory=TableConfig)
 
 
 class Priority(Enum):
