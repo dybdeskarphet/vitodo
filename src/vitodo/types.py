@@ -31,9 +31,9 @@ class Priority(Enum):
 
 
 class TodoItem(TypedDict, total=False):
-    priority: Priority
-    start_date: date
+    priority: Priority | str
+    start_date: date | str
     description: str
-    project: list[str]
-    context: list[str]
-    due_date: date
+    project: list[str] | str
+    context: list[str] | str
+    due_date: date | str

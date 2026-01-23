@@ -29,11 +29,15 @@ class Parser:
         if priority_match:
             todo_item["priority"] = Priority[priority_match.group(1)]
             raw_item = resub(self.re["priority"], "", raw_item).strip()
+        else:
+            todo_item["priority"] = "no priority"
 
         date_match = self.re["date"].match(raw_item)
         if date_match:
             todo_item["start_date"] = datetime.strptime(date_match.group(), "%Y-%m-%d")
             raw_item = resub(self.re["date"], "", raw_item).strip()
+        else:
+            todo_item["start_date"] = "unknown"
 
         context_match = self.re["context"].findall(raw_item)
         if context_match:
@@ -43,6 +47,8 @@ class Parser:
                 if self.clean_description
                 else raw_item
             )
+        else:
+            todo_item["context"] = "no context"
 
         project_match = self.re["project"].findall(raw_item)
         if project_match:
@@ -52,11 +58,15 @@ class Parser:
                 if self.clean_description
                 else raw_item
             )
+        else:
+            todo_item["project"] = "no project"
 
         due_match = self.re["due_date"].search(raw_item)
         if due_match:
             todo_item["due_date"] = datetime.strptime(due_match.group(1), "%Y-%m-%d")
             raw_item = resub(self.re["due_date"], "", raw_item).strip()
+        else:
+            todo_item["due_date"] = "indefinite"
 
         raw_item = resub(r"(\+|\@)", "", raw_item)
         raw_item = resub(r" +", " ", raw_item)
