@@ -39,10 +39,17 @@ class VisualConfig(BaseModel):
     date_format: str = "%Y-%m-%d"
 
 
+class TitleStyle(BaseModel):
+    color: str = "red"
+    bold: bool = True
+    italic: bool = False
+
+
 class TableConfig(BaseModel):
     group_by: TabularMatch = "priority"
     columns: list[ColumnMatch] = ["description"]
     box_type: BoxType = "MINIMAL"
+    title: TitleStyle = Field(default_factory=TitleStyle)
 
 
 class ConfigModel(BaseModel):

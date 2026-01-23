@@ -1,5 +1,6 @@
 from datetime import date
 from rich.console import Console
+from rich.style import Style
 from vitodo.config import config
 from vitodo.logger import error
 from vitodo.messages import ErrorMessages
@@ -63,7 +64,11 @@ class Visualizer:
             table = Table(
                 title=grouping_key,
                 box=getattr(box, config.tables.box_type, box.MINIMAL),
-                title_style="green",
+                title_style=Style(
+                    color=config.tables.title.color,
+                    bold=config.tables.title.bold,
+                    italic=config.tables.title.italic,
+                ),
             )
             [table.add_column(c) for c in config.tables.columns]
             [table.add_row(*r) for r in items]
