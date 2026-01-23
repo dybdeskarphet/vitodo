@@ -1,7 +1,10 @@
+from datetime import date
+from typing import Any, get_type_hints
 from rich.console import Console
+from vitodo.config import config
 from vitodo.logger import error
 from vitodo.messages import ErrorMessages
-from vitodo.types import Priority, TabularMatch, TodoItem
+from vitodo.types import Priority, TabularMatch, TodoItem, TodoItemProperty
 from rich.table import Table
 from rich import box
 
@@ -9,52 +12,56 @@ from rich import box
 class Visualizer:
     def __init__(self, todo_items: list[TodoItem]):
         self.todo_items = todo_items
-        self.todo_items_grouped: dict[str, list[TodoItem]] = {}
+        self.todo_items_grouped: dict[str, list[tuple[str]]] = {}
 
     def _handle_priority_item_grouping(self, key: Priority, item: TodoItem):
-        print(item)
+        column_pack = []
+        for c in config.tables.columns:
+            column_pack.append(self._handle_property_for_rows(item.get(c)))
+
         if key.name in self.todo_items_grouped:
-            self.todo_items_grouped[key.name].append(item)
+            self.todo_items_grouped[key.name].append(tuple(column_pack))
         else:
-            self.todo_items_grouped[key.name] = [item]
+            self.todo_items_grouped[key.name] = [tuple(column_pack)]
 
     def _handle_list_item_grouping(self, keys: list[str], item: TodoItem):
         for key in keys:
+            column_pack = []
+            for c in config.tables.columns:
+                column_pack.append(self._handle_property_for_rows(item.get(c)))
+
             if key in self.todo_items_grouped:
-                self.todo_items_grouped[key].append(item)
+                self.todo_items_grouped[key].append(tuple(column_pack))
             else:
-                self.todo_items_grouped[key] = [item]
+                self.todo_items_grouped[key] = [tuple(column_pack)]
+
+    def _handle_property_for_rows(self, property) -> str:
+        if isinstance(property, Priority):
+            return property.name
+        elif isinstance(property, list):
+            return "\n".join(property)
+        elif isinstance(property, date):
+            return property.strftime(config.visual.date_format)
+        else:
+            return property
 
     def group_by(self, key: TabularMatch):
         for item in self.todo_items:
-            try:
-                item_desc = item.get("description")
-                item_key = item.get(key)
-                if not item_desc or not item_key:
-                    error(ErrorMessages.NO_ITEM_PROPERTIES_GROUPING.value)
-                    exit(1)
-
-                if isinstance(item_key, Priority):
-                    self._handle_priority_item_grouping(item_key, item)
-                elif isinstance(item_key, list):
-                    self._handle_list_item_grouping(item_key, item)
-
-            except KeyError as e:
-                error(f"{ErrorMessages.GROUP_BY_KEY_ERROR.value} {e}")
+            item_desc = item.get("description")
+            item_key = item.get(key)
+            if not item_desc or not item_key:
+                error(ErrorMessages.NO_ITEM_PROPERTIES_GROUPING.value)
                 exit(1)
-            except Exception as e:
-                error(f"{ErrorMessages.INTERNAL_ERROR.value} {e}")
-                exit(1)
+
+            if isinstance(item_key, Priority):
+                self._handle_priority_item_grouping(item_key, item)
+            elif isinstance(item_key, list):
+                self._handle_list_item_grouping(item_key, item)
 
     def generate_table(self):
-        for key, values in self.todo_items_grouped.items():
-            console = Console(width=60)
-            table = Table(box=box.MINIMAL)
-            table.add_column("start")
-            table.add_column(key, no_wrap=False)
-            for value in values:
-                table.add_row(
-                    value.get("start_date").strftime("%m/%d/%Y"),
-                    value.get("description"),
-                )
+        console = Console(width=60)
+        for grouping_key, items in self.todo_items_grouped.items():
+            table = Table(title=grouping_key, title_style="green")
+            [table.add_column(c) for c in config.tables.columns]
+            [table.add_row(*r) for r in items]
             console.print(table)
