@@ -46,3 +46,6 @@ class TodoItem(TypedDict, total=False):
     project: list[str] | str
     context: list[str] | str
     due_date: date | str
+
+
+type TodoItemProperty = Priority | str | list[str] | date
