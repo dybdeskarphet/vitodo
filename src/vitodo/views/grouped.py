@@ -92,7 +92,7 @@ class GroupedViewRenderer:
         self._max_column_width: int = max_column_width
         self._console: Console = Console()
 
-    def _create_tables(self):
+    def _create_tables(self, line_separator: bool):
         tables: list[Table] = []
         for grouping_title, rows in self._grouped_view.items():
             table = Table(
@@ -103,6 +103,8 @@ class GroupedViewRenderer:
                     bold=self._title_style.bold,
                     italic=self._title_style.italic,
                 ),
+                show_lines=line_separator,
+                show_edge=True,
             )
             for c in self._columns:
                 if isinstance(c, str):
@@ -118,12 +120,12 @@ class GroupedViewRenderer:
 
         return tables
 
-    def render_all(self):
-        tables = self._create_tables()
+    def render_all(self, line_separator: bool):
+        tables = self._create_tables(line_separator)
         self._console.print(Columns(tables, equal=True, expand=True))
 
-    def render_one(self, selected_group_title: str):
-        tables = self._create_tables()
+    def render_one(self, selected_group_title: str, line_separator: bool):
+        tables = self._create_tables(line_separator)
         for table in tables:
             if table.title == selected_group_title:
                 self._console.print(table)

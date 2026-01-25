@@ -65,6 +65,7 @@ class TableConfig(BaseModel):
     box_type: BoxType = "MINIMAL"
     title: TitleStyle = Field(default_factory=TitleStyle)
     max_column_width: int = 40
+    line_separator: bool = True
 
 
 class ConfigModel(BaseModel):

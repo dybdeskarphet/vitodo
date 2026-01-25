@@ -34,9 +34,11 @@ def grouped_view(group: GroupTitleArg = None):
     )
 
     if group:
-        grouped_view_renderer.render_one(group)
+        grouped_view_renderer.render_one(
+            group, line_seperator=config.tables.line_separator
+        )
     else:
-        grouped_view_renderer.render_all()
+        grouped_view_renderer.render_all(config.tables.line_separator)
 
 
 if __name__ == "__main__":
