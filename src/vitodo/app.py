@@ -1,7 +1,8 @@
 import typer
 from vitodo.config import config
 from vitodo.parser import Parser
-from vitodo.views.grouped import GroupedView, render_grouped_view
+from vitodo.views import grouped
+from vitodo.views.grouped import GroupedView, GroupedViewRenderer
 
 app = typer.Typer(
     help="A very practical and minimal todo.txt CLI tool",
@@ -17,14 +18,14 @@ def grouped_view():
     ).parse_todo_list()
 
     grouped_view = GroupedView(todo_list, config.tables.columns)
-
-    render_grouped_view(
-        grouped_list=grouped_view.group(config.tables.group_by),
+    grouped_view_renderer = GroupedViewRenderer(
+        grouped_view=grouped_view.group(config.tables.group_by),
         box_type=config.tables.box_type,
         title_style=config.tables.title,
         columns=grouped_view.get_columns(),
         max_column_width=config.tables.max_column_width,
     )
+    grouped_view_renderer.render_all()
 
 
 if __name__ == "__main__":

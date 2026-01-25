@@ -40,7 +40,8 @@ type BoxType = Literal[
     "DOUBLE_EDGE",
     "MARKDOWN",
 ]
-type GroupedViewTodoList = dict[str, list[tuple[str]]]
+type GroupedViewRows = list[tuple[str]]
+type GroupedViewTodoList = dict[str, GroupedViewRows]
 
 
 class GeneralConfig(BaseModel):

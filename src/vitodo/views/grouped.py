@@ -11,6 +11,7 @@ from vitodo.types import (
     ColumnAndStyleMatch,
     ColumnList,
     ColumnMatch,
+    GroupedViewRows,
     GroupedViewTodoList,
     Priority,
     TabularMatch,
@@ -74,36 +75,56 @@ class GroupedView:
 
         return self._grouped_todo_list
 
-def render_grouped_view(
-    grouped_list: GroupedViewTodoList,
-    box_type: BoxType,
-    title_style: TitleStyle,
-    columns: list[ColumnMatch | ColumnAndStyleMatch],
-    max_column_width: int,
-):
-    console = Console()
-    group: list[Table] = []
-    for grouping_key, items in grouped_list.items():
-        table = Table(
-            title=grouping_key,
-            box=getattr(box, box_type, box.MINIMAL),
-            title_style=Style(
-                color=title_style.color,
-                bold=title_style.bold,
-                italic=title_style.italic,
-            ),
-        )
-        for c in columns:
-            if isinstance(c, str):
-                table.add_column(c, max_width=max_column_width)
-            else:
-                table.add_column(
-                    c.column,
-                    style=Style(bold=c.bold, italic=c.italic, color=c.color),
-                    max_width=max_column_width,
-                )
-        [table.add_row(*r) for r in items]
-        group.append(table)
 
-    table_group = Columns(group, equal=True, expand=True)
-    console.print(table_group)
+class GroupedViewRenderer:
+    def __init__(
+        self,
+        grouped_view: GroupedViewTodoList,
+        box_type: BoxType,
+        title_style: TitleStyle,
+        columns: ColumnList,
+        max_column_width: int,
+    ) -> None:
+        self._grouped_view: GroupedViewTodoList = grouped_view
+        self._box_type: BoxType = box_type
+        self._title_style: TitleStyle = title_style
+        self._columns: ColumnList = columns
+        self._max_column_width: int = max_column_width
+        self._console: Console = Console()
+
+    def _create_tables(self):
+        tables: list[Table] = []
+        for grouping_title, rows in self._grouped_view.items():
+            table = Table(
+                title=grouping_title,
+                box=getattr(box, self._box_type, box.MINIMAL),
+                title_style=Style(
+                    color=self._title_style.color,
+                    bold=self._title_style.bold,
+                    italic=self._title_style.italic,
+                ),
+            )
+            for c in self._columns:
+                if isinstance(c, str):
+                    table.add_column(c, max_width=self._max_column_width)
+                else:
+                    table.add_column(
+                        c.column,
+                        style=Style(bold=c.bold, italic=c.italic, color=c.color),
+                        max_width=self._max_column_width,
+                    )
+            [table.add_row(*r) for r in rows]
+            tables.append(table)
+
+        return tables
+
+    def render_all(self):
+        tables = self._create_tables()
+        self._console.print(Columns(tables, equal=True, expand=True))
+
+    def render_one(self, selected_group_title: str):
+        tables = self._create_tables()
+        for table in tables:
+            if table.title == selected_group_title:
+                self._console.print(table)
+                break
