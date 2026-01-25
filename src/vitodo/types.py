@@ -2,7 +2,6 @@ from datetime import date
 from enum import Enum, auto
 from typing import Literal, TypedDict
 from pydantic import BaseModel, Field
-from rich.color import ColorType
 
 type TabularMatch = Literal["priority", "context", "project"]
 type ColumnMatch = Literal[
@@ -54,7 +53,7 @@ class VisualConfig(BaseModel):
 
 
 class TitleStyle(BaseModel):
-    color: str = "red"
+    color: str = "green"
     bold: bool = True
     italic: bool = False
 
