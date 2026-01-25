@@ -61,9 +61,7 @@ class TitleStyle(BaseModel):
 
 class TableConfig(BaseModel):
     group_by: TabularMatch = "priority"
-    columns: list[ColumnMatch | ColumnAndStyleMatch] = [
-        Field(default_factory=ColumnAndStyleMatch)
-    ]
+    columns: list[ColumnMatch | ColumnAndStyleMatch] = ["description"]
     box_type: BoxType = "MINIMAL"
     title: TitleStyle = Field(default_factory=TitleStyle)
 
