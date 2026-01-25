@@ -31,32 +31,31 @@ class GroupedTodoView:
         self._columns: ColumnList = columns
 
     def _handle_priority_item_grouping(self, key: Priority, item: TodoItem):
-        column_pack = []
-        columns = []
+        row_pack = []
         for c in self._columns:
             if isinstance(c, str):
-                column_pack.append(todo_property_to_string(item.get(c)))
+                row_pack.append(todo_property_to_string(item.get(c)))
             else:
-                column_pack.append(todo_property_to_string(item.get(c.column)))
+                row_pack.append(todo_property_to_string(item.get(c.column)))
 
         if key.name in self._grouped_todo_list:
-            self._grouped_todo_list[key.name].append(tuple(column_pack))
+            self._grouped_todo_list[key.name].append(tuple(row_pack))
         else:
-            self._grouped_todo_list[key.name] = [tuple(column_pack)]
+            self._grouped_todo_list[key.name] = [tuple(row_pack)]
 
     def _handle_list_item_grouping(self, keys: list[str], item: TodoItem):
         for key in keys:
-            column_pack = []
+            row_pack = []
             for c in self._columns:
                 if isinstance(c, str):
-                    column_pack.append(todo_property_to_string(item.get(c)))
+                    row_pack.append(todo_property_to_string(item.get(c)))
                 else:
-                    column_pack.append(todo_property_to_string(item.get(c.column)))
+                    row_pack.append(todo_property_to_string(item.get(c.column)))
 
             if key in self._grouped_todo_list:
-                self._grouped_todo_list[key].append(tuple(column_pack))
+                self._grouped_todo_list[key].append(tuple(row_pack))
             else:
-                self._grouped_todo_list[key] = [tuple(column_pack)]
+                self._grouped_todo_list[key] = [tuple(row_pack)]
 
     def get_columns(self) -> ColumnList:
         return self._columns
