@@ -1,3 +1,4 @@
+from typing import Annotated
 import typer
 from vitodo.config import config
 from vitodo.parser import Parser
@@ -10,14 +11,20 @@ app = typer.Typer(
 )
 
 
+GroupTitleArg = Annotated[
+    str | None, "Title of the group you want to view (views all not specified)"
+]
+
+
 @app.command(help="Show to-do list grouped with the specified key")
-def grouped_view():
+def grouped_view(group: GroupTitleArg = None):
     todo_list = Parser(
         todo_path=config.general.todo_path,
         clean_description=config.visual.clean_description,
     ).parse_todo_list()
 
     grouped_view = GroupedView(todo_list, config.tables.columns)
+
     grouped_view_renderer = GroupedViewRenderer(
         grouped_view=grouped_view.group(config.tables.group_by),
         box_type=config.tables.box_type,
@@ -25,7 +32,11 @@ def grouped_view():
         columns=grouped_view.get_columns(),
         max_column_width=config.tables.max_column_width,
     )
-    grouped_view_renderer.render_all()
+
+    if group:
+        grouped_view_renderer.render_one(group)
+    else:
+        grouped_view_renderer.render_all()
 
 
 if __name__ == "__main__":
