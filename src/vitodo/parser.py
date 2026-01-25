@@ -7,7 +7,7 @@ from re import sub as resub
 
 class Parser:
     def __init__(self, todo_path: str, clean_description: bool) -> None:
-        self._todo_items: list[TodoItem] = []
+        self._todo_list: list[TodoItem] = []
         self._todo_path: str = todo_path
         self._re: dict[str, Pattern[str]] = {
             "priority": recmp(r"^\(([A-Z])\)"),
@@ -75,7 +75,7 @@ class Parser:
         try:
             with open(self._todo_path, "r") as file:
                 for line in file:
-                    self._todo_items.append(self._parse_item(line))
+                    self._todo_list.append(self._parse_item(line))
         except OSError as err:
             error(f"OS error: {err}")
             exit(1)
@@ -83,4 +83,4 @@ class Parser:
             error(f"Unexpected {err=}, {type(err)=}")
             exit(1)
 
-        return self._todo_items
+        return self._todo_list
