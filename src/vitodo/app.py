@@ -11,7 +11,10 @@ app = typer.Typer(
 
 @app.command(help="Show to-do list grouped with the specified key")
 def grouped_view():
-    todo_list = Parser(config).parse_todo_list()
+    todo_list = Parser(
+        todo_path=config.general.todo_path,
+        clean_description=config.visual.clean_description,
+    ).parse_todo_list()
     grouped_view = GroupedTodoView(todo_list, config.tables.columns).group(
         config.tables.group_by
     )

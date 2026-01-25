@@ -1,22 +1,22 @@
 from datetime import datetime
-from vitodo.types import ConfigModel, Priority, TodoItem
+from vitodo.types import Priority, TodoItem
 from vitodo.logger import error
-from re import compile as recmp
+from re import Pattern, compile as recmp
 from re import sub as resub
 
 
 class Parser:
-    def __init__(self, config: ConfigModel) -> None:
+    def __init__(self, todo_path: str, clean_description: bool) -> None:
         self._todo_items: list[TodoItem] = []
-        self._todo_path = config.general.todo_path
-        self._re = {
+        self._todo_path: str = todo_path
+        self._re: dict[str, Pattern[str]] = {
             "priority": recmp(r"^\(([A-Z])\)"),
             "date": recmp(r"^\d{4}-\d{2}-\d{2}"),
             "context": recmp(r"\@(\S+)"),
             "project": recmp(r"\+(\S+)"),
             "due_date": recmp(r"due:(\S+)"),
         }
-        self._clean_desc = config.visual.clean_description
+        self._clean_desc: bool = clean_description
 
     def _parse_item(self, item: str) -> TodoItem:
         raw_item = item.strip()
