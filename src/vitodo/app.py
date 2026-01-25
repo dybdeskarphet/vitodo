@@ -1,7 +1,7 @@
 import typer
 from vitodo.config import config
 from vitodo.parser import Parser
-from vitodo.visual import GroupedTodoView, render_grouped_view
+from vitodo.views.grouped import GroupedTodoView, render_grouped_view
 
 app = typer.Typer(
     help="A very practical and minimal todo.txt CLI tool",
