@@ -1,13 +1,15 @@
+from typing import assert_type
 from rich import box
 from rich.console import Console
-from rich.style import Style
-from rich.table import Table
-from vitodo.config import config
+from rich.style import Style, StyleType
+from rich.table import Column, Table
 from vitodo.helpers import todo_property_to_string
 from vitodo.logger import error
 from vitodo.messages import ErrorMessages
 from vitodo.types import (
     BoxType,
+    ColumnAndStyleMatch,
+    ColumnList,
     ColumnMatch,
     GroupedViewTodoList,
     Priority,
@@ -23,16 +25,19 @@ class GroupedTodoView:
     `.group(<grouping_method>)` to get the grouped to-do items.
     """
 
-    def __init__(self, todo_list: list[TodoItem], columns: list[ColumnMatch]):
+    def __init__(self, todo_list: list[TodoItem], columns: ColumnList):
         self._todo_list: list[TodoItem] = todo_list
         self._grouped_todo_list: GroupedViewTodoList = {}
-        self._columns: list[ColumnMatch] = columns
-        return self
+        self._columns: ColumnList = columns
 
     def _handle_priority_item_grouping(self, key: Priority, item: TodoItem):
         column_pack = []
+        columns = []
         for c in self._columns:
-            column_pack.append(todo_property_to_string(item.get(c)))
+            if isinstance(c, str):
+                column_pack.append(todo_property_to_string(item.get(c)))
+            else:
+                column_pack.append(todo_property_to_string(item.get(c.column)))
 
         if key.name in self._grouped_todo_list:
             self._grouped_todo_list[key.name].append(tuple(column_pack))
@@ -43,21 +48,23 @@ class GroupedTodoView:
         for key in keys:
             column_pack = []
             for c in self._columns:
-                column_pack.append(todo_property_to_string(item.get(c)))
+                if isinstance(c, str):
+                    column_pack.append(todo_property_to_string(item.get(c)))
+                else:
+                    column_pack.append(todo_property_to_string(item.get(c.column)))
 
             if key in self._grouped_todo_list:
                 self._grouped_todo_list[key].append(tuple(column_pack))
             else:
                 self._grouped_todo_list[key] = [tuple(column_pack)]
 
-    def get_columns(self) -> list[ColumnMatch]:
+    def get_columns(self) -> ColumnList:
         return self._columns
 
     def group(self, group_by: TabularMatch) -> GroupedViewTodoList:
         for item in self._todo_list:
-            item_desc = item.get("description")
             item_key = item.get(group_by)
-            if not item_desc or not item_key:
+            if not item_key:
                 error(ErrorMessages.NO_ITEM_PROPERTIES_GROUPING.value)
                 exit(1)
 
@@ -73,7 +80,7 @@ def render_grouped_view(
     grouped_list: GroupedViewTodoList,
     box_type: BoxType,
     title_style: TitleStyle,
-    columns: list[ColumnMatch],
+    columns: list[ColumnMatch | ColumnAndStyleMatch],
 ):
     console = Console(width=60)
     for grouping_key, items in grouped_list.items():
@@ -86,6 +93,12 @@ def render_grouped_view(
                 italic=title_style.italic,
             ),
         )
-        [table.add_column(c) for c in config.tables.columns]
+        for c in columns:
+            if isinstance(c, str):
+                table.add_column(c)
+            else:
+                table.add_column(
+                    c.column, style=Style(bold=c.bold, italic=c.italic, color=c.color)
+                )
         [table.add_row(*r) for r in items]
         console.print(table)

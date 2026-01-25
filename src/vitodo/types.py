@@ -2,11 +2,24 @@ from datetime import date
 from enum import Enum, auto
 from typing import Literal, TypedDict
 from pydantic import BaseModel, Field
+from rich.color import ColorType
 
 type TabularMatch = Literal["priority", "context", "project"]
 type ColumnMatch = Literal[
     "priority", "start_date", "description", "project", "context", "due_date"
 ]
+
+
+class ColumnAndStyleMatch(BaseModel):
+    column: ColumnMatch = "description"
+    color: str = "blue"
+    bold: bool = False
+    italic: bool = False
+
+
+type ColumnList = list[ColumnMatch | ColumnAndStyleMatch]
+
+
 type TabularMatchTypes = str | list[str]
 type BoxType = Literal[
     "ASCII",
@@ -48,7 +61,9 @@ class TitleStyle(BaseModel):
 
 class TableConfig(BaseModel):
     group_by: TabularMatch = "priority"
-    columns: list[ColumnMatch] = ["description"]
+    columns: list[ColumnMatch | ColumnAndStyleMatch] = [
+        Field(default_factory=ColumnAndStyleMatch)
+    ]
     box_type: BoxType = "MINIMAL"
     title: TitleStyle = Field(default_factory=TitleStyle)
 
