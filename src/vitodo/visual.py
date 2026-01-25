@@ -27,6 +27,7 @@ class GroupedTodoView:
         self._todo_list: list[TodoItem] = todo_list
         self._grouped_todo_list: GroupedViewTodoList = {}
         self._columns: list[ColumnMatch] = columns
+        return self
 
     def _handle_priority_item_grouping(self, key: Priority, item: TodoItem):
         column_pack = []

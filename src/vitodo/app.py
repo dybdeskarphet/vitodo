@@ -15,14 +15,14 @@ def grouped_view():
         todo_path=config.general.todo_path,
         clean_description=config.visual.clean_description,
     ).parse_todo_list()
-    grouped_view = GroupedTodoView(todo_list, config.tables.columns).group(
-        config.tables.group_by
-    )
+
+    grouped_view = GroupedTodoView(todo_list, config.tables.columns)
+
     render_grouped_view(
-        grouped_view,
+        grouped_list=grouped_view.group(config.tables.group_by),
         box_type=config.tables.box_type,
         title_style=config.tables.title,
-        columns=config.tables.columns,
+        columns=grouped_view.get_columns(),
     )
 
 
