@@ -19,7 +19,7 @@ from vitodo.types import (
 )
 
 
-class GroupedTodoView:
+class GroupedView:
     """
     `__init__` only initializes the class, you have to use
     `.group(<grouping_method>)` to get the grouped to-do items.
@@ -73,7 +73,6 @@ class GroupedTodoView:
                 self._handle_list_item_grouping(item_key, item)
 
         return self._grouped_todo_list
-
 
 def render_grouped_view(
     grouped_list: GroupedViewTodoList,
