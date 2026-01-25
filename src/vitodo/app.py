@@ -9,11 +9,18 @@ app = typer.Typer(
 )
 
 
-@app.command()
+@app.command(help="Show to-do list grouped with the specified key")
 def grouped_view():
     todo_list = Parser(config).parse_todo_list()
-    grouped_view = GroupedTodoView(todo_list).group(config.tables.group_by)
-    render_grouped_view(grouped_view)
+    grouped_view = GroupedTodoView(todo_list, config.tables.columns).group(
+        config.tables.group_by
+    )
+    render_grouped_view(
+        grouped_view,
+        box_type=config.tables.box_type,
+        title_style=config.tables.title,
+        columns=config.tables.columns,
+    )
 
 
 if __name__ == "__main__":
