@@ -1,8 +1,8 @@
-from typing import assert_type
 from rich import box
 from rich.console import Console
-from rich.style import Style, StyleType
-from rich.table import Column, Table
+from rich.style import Style
+from rich.table import Table
+from rich.columns import Columns
 from vitodo.helpers import todo_property_to_string
 from vitodo.logger import error
 from vitodo.messages import ErrorMessages
@@ -81,8 +81,10 @@ def render_grouped_view(
     box_type: BoxType,
     title_style: TitleStyle,
     columns: list[ColumnMatch | ColumnAndStyleMatch],
+    max_column_width: int,
 ):
-    console = Console(width=60)
+    console = Console()
+    group: list[Table] = []
     for grouping_key, items in grouped_list.items():
         table = Table(
             title=grouping_key,
@@ -95,10 +97,15 @@ def render_grouped_view(
         )
         for c in columns:
             if isinstance(c, str):
-                table.add_column(c)
+                table.add_column(c, max_width=max_column_width)
             else:
                 table.add_column(
-                    c.column, style=Style(bold=c.bold, italic=c.italic, color=c.color)
+                    c.column,
+                    style=Style(bold=c.bold, italic=c.italic, color=c.color),
+                    max_width=max_column_width,
                 )
         [table.add_row(*r) for r in items]
-        console.print(table)
+        group.append(table)
+
+    table_group = Columns(group, equal=True, expand=True)
+    console.print(table_group)

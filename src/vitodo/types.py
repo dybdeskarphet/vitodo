@@ -63,6 +63,7 @@ class TableConfig(BaseModel):
     columns: list[ColumnMatch | ColumnAndStyleMatch] = ["description"]
     box_type: BoxType = "MINIMAL"
     title: TitleStyle = Field(default_factory=TitleStyle)
+    max_column_width: int = 40
 
 
 class ConfigModel(BaseModel):

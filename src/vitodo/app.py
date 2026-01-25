@@ -23,6 +23,7 @@ def grouped_view():
         box_type=config.tables.box_type,
         title_style=config.tables.title,
         columns=grouped_view.get_columns(),
+        max_column_width=config.tables.max_column_width,
     )
 
 
