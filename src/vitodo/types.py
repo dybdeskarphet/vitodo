@@ -1,3 +1,4 @@
+from ctypes import Array
 from datetime import date
 from enum import Enum, auto
 from typing import Literal, TypedDict
@@ -88,7 +89,7 @@ class TitleStyle(BaseModel):
     italic: bool = False
 
 
-class TableConfig(BaseModel):
+class GroupedViewConfig(BaseModel):
     group_by: TabularMatch = "priority"
     columns: list[ColumnMatch | ColumnAndStyleMatch] = ["description"]
     box_type: BoxType = "MINIMAL"
@@ -97,19 +98,59 @@ class TableConfig(BaseModel):
     line_separator: bool = True
 
 
+type PriorityLiteral = Literal[
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "U",
+    "V",
+    "W",
+    "X",
+    "Y",
+    "Z",
+]
+
+type FieldLiteral = Literal[
+    "important_urgent",
+    "important_not_urgent",
+    "not_important_urgent",
+    "not_important_not_urgent",
+]
+
+
+class PriorityFields(BaseModel):
+    important_urgent: list[PriorityLiteral] = [Priority.A.name]
+    important_not_urgent: list[PriorityLiteral] = [Priority.B.name]
+    not_important_urgent: list[PriorityLiteral] = [Priority.C.name]
+    not_important_not_urgent: list[PriorityLiteral] = [Priority.D.name]
+
+
+class EisenhowerViewConfig(BaseModel):
+    priority_to_field: PriorityFields = Field(default_factory=PriorityFields)
+
+
 class ConfigModel(BaseModel):
     general: GeneralConfig
     visual: VisualConfig = Field(default_factory=VisualConfig)
-    tables: TableConfig = Field(default_factory=TableConfig)
-
-
-class Priority(Enum):
-    A = auto()
-    B = auto()
-    C = auto()
-    D = auto()
-    E = auto()
-    F = auto()
+    grouped_view: GroupedViewConfig = Field(default_factory=GroupedViewConfig)
+    eisenhower_view: EisenhowerViewConfig = Field(default_factory=EisenhowerViewConfig)
 
 
 class TodoItem(TypedDict, total=False):
@@ -120,5 +161,7 @@ class TodoItem(TypedDict, total=False):
     context: list[str] | str
     due_date: date | str
 
+
+type EHMatrix = dict[str, list[str]]
 
 type TodoItemProperty = Priority | str | list[str] | date
