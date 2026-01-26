@@ -16,6 +16,35 @@ class ColumnAndStyleMatch(BaseModel):
     italic: bool = False
 
 
+class Priority(Enum):
+    A = auto()
+    B = auto()
+    C = auto()
+    D = auto()
+    E = auto()
+    F = auto()
+    G = auto()
+    H = auto()
+    I = auto()
+    J = auto()
+    K = auto()
+    L = auto()
+    M = auto()
+    N = auto()
+    O = auto()
+    P = auto()
+    Q = auto()
+    R = auto()
+    S = auto()
+    T = auto()
+    U = auto()
+    V = auto()
+    W = auto()
+    X = auto()
+    Y = auto()
+    Z = auto()
+
+
 type ColumnList = list[ColumnMatch | ColumnAndStyleMatch]
 
 
