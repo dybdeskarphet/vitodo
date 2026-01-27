@@ -170,7 +170,7 @@ class EisenhowerViewConfig(BaseModel):
 
 
 class ConfigModel(BaseModel):
-    general: GeneralConfig
+    general: GeneralConfig = Field(default_factory=GeneralConfig)
     visual: VisualConfig = Field(default_factory=VisualConfig)
     grouped_view: GroupedViewConfig = Field(default_factory=GroupedViewConfig)
     eisenhower_view: EisenhowerViewConfig = Field(default_factory=EisenhowerViewConfig)

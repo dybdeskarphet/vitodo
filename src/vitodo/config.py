@@ -8,6 +8,7 @@ from vitodo.logger import error
 from vitodo.logger import console
 import tomllib
 from os import path
+import tomli_w
 
 from vitodo.messages import ErrorMessages
 from vitodo.types import ConfigModel
@@ -20,9 +21,16 @@ class Config:
         self.config_raw: dict[str, Any]
         self.config_parsed: ConfigModel
         self._set_config_path()
+        self._create_config_if_not_exists()
         self._read_config()
         self._load_config()
         self._expand_config()
+
+    def _create_config_if_not_exists(self):
+        config_json = ConfigModel().model_dump()
+        if not self.config_path.exists():
+            with open(self.config_path, "wb") as f:
+                tomli_w.dump(config_json, f)
 
     def _set_config_path(self):
         home = getenv("HOME")
