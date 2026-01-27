@@ -2,18 +2,14 @@
 name = "vitodo"
 version = "0.1.0"
 license = "GPL-3.0-or-later"
-description = "A very practical and minimal todo.txt CLI tool"
+description = "Highly customizable todo.txt visualization tool"
 keywords = ["todotxt", "todo", "minimal", "cli", "productivity", "productive"]
 readme = "README.md"
 requires-python = ">=3.13"
 maintainers = [
   { name = "Ahmet Arda Kavakcı", email = "ahmetardakavakci@gmail.com" },
 ]
-dependencies = [
-    "pydantic>=2.12.5",
-    "rich>=14.2.0",
-    "typer>=0.21.1",
-]
+dependencies = ["pydantic>=2.12.5", "rich>=14.2.0", "typer>=0.21.1"]
 
 [project.urls]
 Documentation = "https://github.com/dybdeskarphet/vitodo"
