@@ -105,12 +105,14 @@ class EisenhowerMatrixRenderer:
             self._renderable_matrix[field_name]["item_list"] = Group(*texts)
 
         for field_title, renderable_field in self._renderable_matrix.items():
+            title_enum = getattr(FieldEnum, field_title, "not_important_not_urgent")
+            if not isinstance(title_enum, FieldEnum):
+                continue
+
             self._panels.append(
                 Panel(
                     renderable_field.get("item_list"),
-                    title=getattr(
-                        FieldEnum, field_title, "not_important_not_urgent"
-                    ).value,
+                    title=title_enum.value,
                     style=renderable_field.get("style"),
                 )
             )
