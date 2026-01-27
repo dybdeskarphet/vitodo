@@ -9,7 +9,12 @@ requires-python = ">=3.13"
 maintainers = [
   { name = "Ahmet Arda Kavakcı", email = "ahmetardakavakci@gmail.com" },
 ]
-dependencies = ["pydantic>=2.12.5", "rich>=14.2.0", "typer>=0.21.1"]
+dependencies = [
+    "pydantic>=2.12.5",
+    "rich>=14.2.0",
+    "tomli-w>=1.2.0",
+    "typer>=0.21.1",
+]
 
 [project.urls]
 Documentation = "https://github.com/dybdeskarphet/vitodo"
