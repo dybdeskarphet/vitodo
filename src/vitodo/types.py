@@ -75,7 +75,7 @@ type GroupedViewTodoList = dict[str, GroupedViewRows]
 
 
 class GeneralConfig(BaseModel):
-    todo_path: str
+    todo_path: str = "~/Documents/todo.txt"
 
 
 class VisualConfig(BaseModel):
