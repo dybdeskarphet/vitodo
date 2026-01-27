@@ -85,7 +85,7 @@ class VisualConfig(BaseModel):
 
 class TextStyle(BaseModel):
     color: str = "green"
-    bold: bool = True
+    bold: bool = False
     italic: bool = False
 
 
