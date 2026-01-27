@@ -193,11 +193,7 @@ class RenderableField(TypedDict):
     item_list: Group
 
 
-class RenderableMatrix(TypedDict):
-    important_urgent: RenderableField
-    important_not_urgent: RenderableField
-    not_important_urgent: RenderableField
-    not_important_not_urgent: RenderableField
+type RenderableMatrix = dict[str, RenderableField]
 
 
 type TodoItemProperty = Priority | str | list[str] | date
