@@ -83,7 +83,7 @@ class VisualConfig(BaseModel):
     date_format: str = "%Y-%m-%d"
 
 
-class TitleStyle(BaseModel):
+class TextStyle(BaseModel):
     color: str = "green"
     bold: bool = True
     italic: bool = False
@@ -93,7 +93,7 @@ class GroupedViewConfig(BaseModel):
     group_by: TabularMatch = "priority"
     columns: list[ColumnMatch | ColumnAndStyleMatch] = ["description"]
     box_type: BoxType = "MINIMAL"
-    title: TitleStyle = Field(default_factory=TitleStyle)
+    title: TextStyle = Field(default_factory=TextStyle)
     max_column_width: int = 40
     line_separator: bool = True
 

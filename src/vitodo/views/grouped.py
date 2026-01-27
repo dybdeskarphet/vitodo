@@ -8,14 +8,11 @@ from vitodo.logger import error
 from vitodo.messages import ErrorMessages
 from vitodo.types import (
     BoxType,
-    ColumnAndStyleMatch,
     ColumnList,
-    ColumnMatch,
-    GroupedViewRows,
     GroupedViewTodoList,
     Priority,
     TabularMatch,
-    TitleStyle,
+    TextStyle,
     TodoItem,
 )
 
@@ -81,13 +78,13 @@ class GroupedViewRenderer:
         self,
         grouped_view: GroupedViewTodoList,
         box_type: BoxType,
-        title_style: TitleStyle,
+        title_style: TextStyle,
         columns: ColumnList,
         max_column_width: int,
     ) -> None:
         self._grouped_view: GroupedViewTodoList = grouped_view
         self._box_type: BoxType = box_type
-        self._title_style: TitleStyle = title_style
+        self._title_style: TextStyle = title_style
         self._columns: ColumnList = columns
         self._max_column_width: int = max_column_width
         self._console: Console = Console()
