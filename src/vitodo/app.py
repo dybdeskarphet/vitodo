@@ -1,8 +1,9 @@
+import json
 from typing import Annotated
 import typer
 from vitodo.config import config
 from vitodo.parser import Parser
-from vitodo.views.eisenhower import create_eisenhower_matrix, render_eisenhower_matrix
+from vitodo.views.eisenhower import EisenhowerMatrixRenderer, create_eisenhower_matrix
 from vitodo.views.grouped import GroupedView, GroupedViewRenderer
 
 app = typer.Typer(
@@ -47,9 +48,13 @@ def eisenhower_view():
         todo_path=config.general.todo_path,
         clean_description=config.visual.clean_description,
     ).parse_todo_list()
-    matrix = create_eisenhower_matrix(
-        todo_list, config.eisenhower_view.priority_to_field
-    )
+    matrix = create_eisenhower_matrix(todo_list, config.eisenhower_view.fields)
+
+    EisenhowerMatrixRenderer(
+        config.eisenhower_view.fields, config.eisenhower_view.field_size
+    ).populate(matrix).render()
+
+    # render_eisenhower_matrix(matrix, config.eisenhower_view.field_size)
 
 
 if __name__ == "__main__":

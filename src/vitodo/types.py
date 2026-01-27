@@ -1,8 +1,10 @@
-from ctypes import Array
 from datetime import date
 from enum import Enum, auto
 from typing import Literal, TypedDict
 from pydantic import BaseModel, Field
+from rich.console import Group
+from rich.style import Style
+from rich.text import Text
 
 type TabularMatch = Literal["priority", "context", "project"]
 type ColumnMatch = Literal[
@@ -135,15 +137,36 @@ type FieldLiteral = Literal[
 ]
 
 
-class PriorityFields(BaseModel):
-    important_urgent: list[PriorityLiteral] = [Priority.A.name]
-    important_not_urgent: list[PriorityLiteral] = [Priority.B.name]
-    not_important_urgent: list[PriorityLiteral] = [Priority.C.name]
-    not_important_not_urgent: list[PriorityLiteral] = [Priority.D.name]
+class FieldEnum(Enum):
+    important_urgent = "important, urgent"
+    important_not_urgent = "important, not urgent"
+    not_important_urgent = "not important, urgent"
+    not_important_not_urgent = "not important, not urgent"
+
+
+class FieldModel(BaseModel):
+    style: TextStyle
+    priorities: list[PriorityLiteral]
+
+
+class Fields(BaseModel):
+    important_urgent: FieldModel = FieldModel(
+        style=TextStyle(color="green"), priorities=[Priority.A.name]
+    )
+    important_not_urgent: FieldModel = FieldModel(
+        style=TextStyle(color="blue"), priorities=[Priority.B.name]
+    )
+    not_important_urgent: FieldModel = FieldModel(
+        style=TextStyle(color="red"), priorities=[Priority.C.name]
+    )
+    not_important_not_urgent: FieldModel = FieldModel(
+        style=TextStyle(color="magenta"), priorities=[Priority.D.name]
+    )
 
 
 class EisenhowerViewConfig(BaseModel):
-    priority_to_field: PriorityFields = Field(default_factory=PriorityFields)
+    fields: Fields = Field(default_factory=Fields)
+    field_size: int = 20
 
 
 class ConfigModel(BaseModel):
@@ -163,5 +186,18 @@ class TodoItem(TypedDict, total=False):
 
 
 type EHMatrix = dict[str, list[str]]
+
+
+class RenderableField(TypedDict):
+    style: Style
+    item_list: Group
+
+
+class RenderableMatrix(TypedDict):
+    important_urgent: RenderableField
+    important_not_urgent: RenderableField
+    not_important_urgent: RenderableField
+    not_important_not_urgent: RenderableField
+
 
 type TodoItemProperty = Priority | str | list[str] | date
