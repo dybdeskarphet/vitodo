@@ -31,6 +31,12 @@
 - `grouped-view` – shows to-do list grouped with the specified key
 - `eisenhower-view` – shows to-do list in an Eisenhower matrix
 
+<details>
+  <summary>Previews</summary>
+  <img src="./wiki/assets/01_priority_grouping.png" height="400"/>
+    <img src="./wiki/assets/03_eisenhower.png" height="400"/>
+</details>
+
 ## Installation
 
 Install with `pipx`, `pip` or `uv` accordingly:
