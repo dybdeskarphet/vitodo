@@ -105,10 +105,12 @@ class GroupedViewRenderer:
             )
             for c in self._columns:
                 if isinstance(c, str):
-                    table.add_column(c, max_width=self._max_column_width)
+                    table.add_column(
+                        c.replace("_", " "), max_width=self._max_column_width
+                    )
                 else:
                     table.add_column(
-                        c.column,
+                        c.column.replace("_", " "),
                         style=Style(bold=c.bold, italic=c.italic, color=c.color),
                         max_width=self._max_column_width,
                     )
