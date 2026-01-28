@@ -3,6 +3,8 @@
 ### 📚 Documentation
 
 - *(changelog)* Update CHANGELOG
+- *(changelog)* Update CHANGELOG
+- *(wiki)* Fix grammar
 
 ### ⚙️ Miscellaneous Tasks
 
