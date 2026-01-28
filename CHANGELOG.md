@@ -6,6 +6,7 @@
 - *(changelog)* Update CHANGELOG
 - *(wiki)* Fix grammar
 - *(changelog)* Update CHANGELOG
+- *(changelog)* Update CHANGELOG
 
 ### ⚙️ Miscellaneous Tasks
 
