@@ -1,8 +1,13 @@
 ## [unreleased]
 
+### 📚 Documentation
+
+- *(changelog)* Update CHANGELOG
+
 ### ⚙️ Miscellaneous Tasks
 
 - Put all the Github Actions to their right place
+- *(release)* Make it manually launchable
 ## [0.1.0] - 2026-01-28
 
 ### 🚀 Features
