@@ -8,6 +8,8 @@
 - *(changelog)* Update CHANGELOG
 - *(changelog)* Update CHANGELOG
 - *(changelog)* Update CHANGELOG
+- *(changelog)* Update CHANGELOG
+- *(readme)* Show previews in a table instead of a hidden details menu
 
 ### ⚙️ Miscellaneous Tasks
 
