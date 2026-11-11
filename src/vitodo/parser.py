@@ -65,7 +65,8 @@ class Parser:
         else:
             todo_item["due_date"] = "indefinite"
 
-        raw_item = resub(r"(\+|\@)", "", raw_item)
+        if self._clean_desc:
+            raw_item = resub(r"(\+|\@)", "", raw_item)
         raw_item = resub(r" +", " ", raw_item)
         todo_item["description"] = raw_item
 
